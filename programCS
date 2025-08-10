@@ -1,0 +1,41 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace giderYonetim
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            işlemler yeniIslemler = new işlemler();
+            Console.WriteLine("gider işlemlerini seçmek için 1, gelir işlemlerini seçmek için 0 a basınız");
+
+
+            while (true)
+            {
+                string seçim = Console.ReadLine();
+                if (seçim == "1")
+                {
+                    //gider ekranı gözükecek
+
+                    yeniIslemler.ekleme(false);
+                    yeniIslemler.Liste();
+                }
+                else if (seçim == "0")
+                {
+                    yeniIslemler.ekleme(true);
+                    yeniIslemler.Liste();
+                }
+                else if (seçim != "1" && seçim != "0")
+                {
+                    break;
+                }
+
+            }
+        }
+    }
+}
