@@ -1,0 +1,285 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Security.Policy;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace giderYonetim
+
+{
+    public class Yonetim
+    {
+        #region gider stünu
+        private string giderAdi_;
+        private decimal giderMiktarı_;
+        private DateTime giderZamanı_;
+        public Yonetim()
+        {
+
+        }
+        public string giderAdi
+        {
+            get { return giderAdi_; }
+            set
+            {
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new Exception("yazdığınız ad doğru formatta değil lütfen düzeltiniz");
+                }
+                else
+                    giderAdi_ = value;
+            }
+        }
+        public decimal giderMiktarı
+        {
+            get { return giderMiktarı_; }
+            set
+            {
+
+                if (value < 0)
+                {
+                    throw new Exception("girilen değer 0 dan küçük olamaz");
+                }
+                else
+                    giderMiktarı_ = value;
+            }
+        }
+        public DateTime giderzamamı
+        {
+            get { return giderZamanı_; }
+            set
+            {
+                DateTime date = DateTime.Now;
+
+                giderZamanı_ = value;
+            }
+        }
+        #endregion Liste ve yönetim stunu
+
+        #region Gelir stünu
+
+        private string gelirAdı_;
+        private decimal gelirMiktarı_;
+        private DateTime gelirTarihi_;
+
+        public string gelirAdı
+        {
+            get { return gelirAdı_; }
+            set { gelirAdı_ = value; }
+
+        }
+        public decimal gelirMiktarı
+        {
+            get { return gelirMiktarı_; }
+            set { gelirMiktarı_ = value; }
+        }
+        public DateTime gelirTarihi
+        {
+            get { return gelirTarihi_; }
+            set { gelirTarihi_ = value; }
+        }
+        #endregion
+        public class display
+        {
+
+        }
+    }
+
+    public class işlemler
+    {
+        private List<Yonetim> Transactions = new List<Yonetim>();
+        public void ekleme(bool isgelir)
+        {
+            Yonetim Gider = new Yonetim();
+            Console.WriteLine("Lütfen girmek istediğiniz gider ya da gelir türünün adını giriniz: ");
+            string ad = Console.ReadLine();
+            if (isgelir)
+            {
+
+                Console.WriteLine("");
+
+                if (string.IsNullOrWhiteSpace(ad))
+                {
+                    throw new Exception("girdiğiniz ad doğru değil lütfen tekrar deneyiniz");
+                }
+                else
+                    Gider.gelirAdı = ad;
+            }
+            else
+            {
+                // gider için burayı kullanıyoruz
+                if (string.IsNullOrWhiteSpace(ad))
+                {
+                    throw new Exception("Girdiğiniz değer hatalı lütfen kontrol ediniz");
+                }
+                else
+                {
+                    Gider.giderAdi = ad;
+                }
+            }
+
+            Console.WriteLine("Lütfen istediğiniz gider ya da gelir türünün miktarını giriniz");
+            decimal fiyat = decimal.Parse(Console.ReadLine());
+            if (isgelir)
+            {
+                if (fiyat < 0)
+                {
+                    throw new Exception("Girdiğiniz fiyat değeri 0 dan küçük olamaz");
+                }
+                else
+                    Gider.gelirMiktarı = fiyat;
+
+            }
+            else
+            {
+                if (fiyat < 0)
+                {
+                    throw new Exception("Girdiğiniz değer hatalı lütfen kontrol ediniz");
+                }
+                else
+                {
+                    Gider.giderMiktarı = fiyat;
+                }
+            }
+            DateTime date = DateTime.Now;
+            if (isgelir)
+            {
+                Gider.gelirTarihi = date;
+            }
+            else
+            {
+                Gider.giderzamamı = date;
+            }
+            Transactions.Add(Gider);
+
+        }
+
+        public void çıkarma()
+        {
+            Console.WriteLine("Gider için 1 e gelir için 0 a basınız");
+            string Iseçim = Console.ReadLine();
+
+            if (Iseçim == "1")
+            {
+                Console.WriteLine("Çıkarmak istediğiniz değeri giriniz");
+                Liste();
+                string ArananDeger = Console.ReadLine();
+                for (int i = 0; i < Transactions.Count; i++)
+                {
+                    if (Transactions[i].giderAdi == ArananDeger)
+                    {
+                        Console.WriteLine("Silmek istediğiniz değer bulundu bu işlemi gerçekleştirmek istediğinze emin misiniz ?" +
+                            "silme işlemine devam etmek için E tuşuna basınız.");
+
+                        string cevap = Console.ReadLine();
+                        if (cevap == "e".ToUpper())
+                        {
+                            Transactions.RemoveAt(i);
+                        }
+                        else
+                        {
+                            Console.WriteLine("geri dönülüyor");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("Çıkarmak istediğiniz değeri giriniz");
+                Liste();
+                string ArananDeger = Console.ReadLine();
+                for (int i = 0; i < Transactions.Count; i++)
+                {
+                    if (Transactions[i].gelirAdı == ArananDeger)
+                    {
+                        Console.WriteLine("Silmek istediğiniz değer bulundu bu işlemi gerçekleştirmek istediğinze emin misiniz ?" +
+                            "silme işlemine devam etmek için E tuşuna basınız.");
+
+                        string cevap = Console.ReadLine();
+                        if (cevap == "e".ToUpper())
+                        {
+                            Transactions.RemoveAt(i);
+                        }
+                        else
+                        {
+                            Console.WriteLine("geri dönülüyor");
+                        }
+                    }
+                }
+            }
+        }
+        public void düzenleme()
+        {
+            Liste();
+            Console.WriteLine("Gider için 1 e gelir için 0 a basınız");
+            string kullaniciSecim = Console.ReadLine();
+            if (kullaniciSecim == "1")
+            {
+                Console.WriteLine("Düzenlemek istediğiniz veriyi giriniz.");
+                string düzenlenecekVeri = Console.ReadLine();
+                for (int i = 0; i < Transactions.Count; i++)
+                {
+                    if (Transactions[i].giderAdi == düzenlenecekVeri)
+                    {
+                        Console.WriteLine("Düzenlemek istediğiniz veri bulundu bu işlemi yapmak istediğinze emin misiniz ?" +
+                            "değiştirmek istediğiniz veriyi giriniz");
+                        string değişenVeri = Console.ReadLine();
+                        Transactions[i].giderAdi = değişenVeri;
+                        Console.WriteLine("işleminiz başarı ile tamamlandı");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Aradığnız veri bulunamadı.");
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("Düzenlemek istediğiniz veriyi giriniz.");
+                string düzenlenecekVeri = Console.ReadLine();
+                for (int i = 0; i < Transactions.Count; i++)
+                {
+                    if (Transactions[i].gelirAdı == düzenlenecekVeri)
+                    {
+                        Console.WriteLine("Düzenlemek istediğiniz veri bulundu bu işlemi yapmak istediğinze emin misiniz ?" +
+                            "değiştirmek istediğiniz veriyi giriniz");
+                        string değişenVeri = Console.ReadLine();
+                        Transactions[i].gelirAdı = değişenVeri;
+                        Console.WriteLine("işleminiz başarı ile tamamlandı");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Aradığnız veri bulunamadı.");
+                    }
+                }
+            }
+        }
+        public void Liste()
+        {
+            Console.WriteLine("Yazdırmak istediğiniz işlemi seçiniz gider için 1 gelir için 0");
+            string seçim = Console.ReadLine();
+            if (seçim == "1")
+            {
+                foreach (var i in Transactions)
+                {
+                    Console.WriteLine("Gider adı: " + i.giderAdi);
+                    Console.WriteLine("Gider miktarı: " + i.giderMiktarı);
+                    Console.WriteLine("Gider zamanı: " + i.giderzamamı);
+                }
+            }
+            else
+            {
+                foreach (var i in Transactions)
+                {
+                    Console.WriteLine("Gelir adı" + i.gelirAdı);
+                    Console.WriteLine("Gelir miktarı" + i.gelirMiktarı);
+                    Console.WriteLine("Gelir zamanı" + i.gelirTarihi);
+                }
+            }
+
+        }
+    }
+}
